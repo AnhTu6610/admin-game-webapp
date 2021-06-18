@@ -1,4 +1,4 @@
-package com.example.trival_admin
+package com.example.admin_game
 
 import io.flutter.embedding.android.FlutterActivity
 

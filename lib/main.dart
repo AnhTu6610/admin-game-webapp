@@ -1,12 +1,12 @@
+import 'package:admin_game/views/authen_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:trival_admin/views/home_screen.dart';
+import 'package:admin_game/views/home_screen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -19,7 +19,11 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: AuthenScreen(),
+      routes: {
+        '/home': (context) => HomeScreen(),
+        '/authen': (context) => AuthenScreen(),
+      },
     );
   }
 }

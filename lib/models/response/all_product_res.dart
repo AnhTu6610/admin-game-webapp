@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:trival_admin/models/response/base_res.dart';
+import 'package:admin_game/models/response/base_res.dart';
 part 'all_product_res.g.dart';
 
 @JsonSerializable()

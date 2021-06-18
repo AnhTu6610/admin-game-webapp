@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.trival_admin">
+    package="com.example.admin_game">
    <application
-        android:label="trival_admin"
+        android:label="admin_game"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

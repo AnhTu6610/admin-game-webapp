@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:trival_admin/data_source/network_data/config/apisubdomain.dart';
-import 'package:trival_admin/data_source/network_data/config/restclient.dart';
+import 'package:admin_game/data_source/network_data/config/apisubdomain.dart';
+import 'package:admin_game/data_source/network_data/config/restclient.dart';
 
 class CreateProductScreen extends StatefulWidget {
   const CreateProductScreen({Key? key}) : super(key: key);
@@ -37,6 +37,15 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         print('No image selected.');
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _images.clear();
+    _cateText.clear();
+    _nameText.clear();
+    _desText.clear();
   }
 
   @override
@@ -85,46 +94,49 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       ),
                       SizedBox(width: 20),
                       Flexible(
-                        flex: 1,
+                        flex: 2,
                         child: Center(
                           child: Column(
                             children: [
-                              Column(
-                                children: List.generate(
-                                  _images.length,
-                                  (index) => Stack(
-                                    alignment: Alignment.topRight,
-                                    children: [
-                                      Image.memory(
-                                        _images[index].bytes!,
-                                        height: 200,
+                              GridView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: _images.length,
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 16 / 9,
+                                  mainAxisSpacing: 5,
+                                  crossAxisSpacing: 5,
+                                ),
+                                itemBuilder: (context, index) => Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    Image.memory(
+                                      _images[index].bytes!,
+                                      height: 200,
+                                    ),
+                                    Container(
+                                      color: Colors.white,
+                                      margin: EdgeInsets.all(5),
+                                      child: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _images.removeAt(index);
+                                          });
+                                        },
+                                        icon: Icon(Icons.delete_outline_outlined),
                                       ),
-                                      Container(
-                                        color: Colors.white,
-                                        margin: EdgeInsets.all(5),
-                                        child: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              _images.removeAt(index);
-                                            });
-                                          },
-                                          icon: Icon(Icons.delete_outline_outlined),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              InkWell(
-                                onTap: () {
+                              SizedBox(height: 20),
+                              ElevatedButton.icon(
+                                onPressed: () {
                                   getImage();
                                 },
-                                child: Container(
-                                  color: Colors.grey.shade200,
-                                  width: 160,
-                                  height: 90,
-                                  child: Icon(Icons.image_outlined),
-                                ),
+                                icon: Icon(Icons.add),
+                                label: Text("Images"),
                               ),
                             ],
                           ),

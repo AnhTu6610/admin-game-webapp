@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:logger/logger.dart';
-import 'package:trival_admin/data_source/network_data/config/apisubdomain.dart';
-import 'package:trival_admin/data_source/network_data/config/restclient.dart';
-import 'package:trival_admin/models/response/all_product_res.dart';
+import 'package:admin_game/data_source/network_data/config/apisubdomain.dart';
+import 'package:admin_game/data_source/network_data/config/restclient.dart';
+import 'package:admin_game/models/response/all_product_res.dart';
 
 class EditProductScreen extends StatefulWidget {
   final ProductDetail product;
@@ -49,6 +49,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _cateText.text = widget.product.category!;
     _nameText.text = widget.product.name!;
     _desText.text = widget.product.description!;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _images.clear();
+    _cateText.clear();
+    _nameText.clear();
+    _desText.clear();
   }
 
   @override

@@ -1,8 +1,8 @@
 import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:trival_admin/data_source/network_data/config/apisubdomain.dart';
-import 'package:trival_admin/models/response/all_product_res.dart';
+import 'package:admin_game/data_source/network_data/config/apisubdomain.dart';
+import 'package:admin_game/models/response/all_product_res.dart';
 
 part 'restclient.g.dart';
 

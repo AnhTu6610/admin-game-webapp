@@ -1,4 +1,4 @@
-# trival_admin
+# admin_game
 
 A new Flutter project.
 

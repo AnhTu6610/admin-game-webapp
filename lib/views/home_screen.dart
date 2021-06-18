@@ -1,16 +1,18 @@
 import 'dart:async';
 
+import 'package:admin_game/constants/authen_const.dart';
+import 'package:admin_game/main.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:retrofit/dio.dart';
-import 'package:trival_admin/data_source/network_data/config/apisubdomain.dart';
-import 'package:trival_admin/data_source/network_data/config/restclient.dart';
-import 'package:trival_admin/models/response/all_product_res.dart';
-import 'package:trival_admin/views/create_product_screen.dart';
-import 'package:trival_admin/views/edit_product_screen.dart';
-import 'package:trival_admin/widgets/common_dialog.dart';
+import 'package:admin_game/data_source/network_data/config/apisubdomain.dart';
+import 'package:admin_game/data_source/network_data/config/restclient.dart';
+import 'package:admin_game/models/response/all_product_res.dart';
+import 'package:admin_game/views/create_product_screen.dart';
+import 'package:admin_game/views/edit_product_screen.dart';
+import 'package:admin_game/widgets/common_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,21 +23,29 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var rest = new RestClient(new Dio(), baseUrl: domainServer);
+  var arguments;
 
   int getCrossAxisCount() {
     double w = MediaQuery.of(context).size.width;
     if (w < 600) return 2;
-    if (w < 1000) return 3;
-    return 4;
+    if (w < 1000) return 2;
+    return 2;
   }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      if (arguments == null) {
+        Navigator.of(context).pushReplacementNamed("/authen");
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    arguments = ModalRoute.of(context)!.settings.arguments;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("App Admin"),
@@ -73,41 +83,50 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Divider(),
-                Text(
-                  "${data![index].nameCat}",
+                SelectableText(
+                  "${data![index].nameCat} | Items: ${data[index].products?.length}",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 Divider(),
-                GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: data[index].products?.length ?? 0,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: getCrossAxisCount(),
-                    childAspectRatio: 16 / 10,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
+                Container(
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: GridView.builder(
+                    // physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: data[index].products?.length ?? 0,
+                    scrollDirection: Axis.horizontal,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: getCrossAxisCount(),
+                      childAspectRatio: 10 / 16,
+                      mainAxisSpacing: 5,
+                      crossAxisSpacing: 5,
+                    ),
+                    itemBuilder: (context, i) {
+                      ProductDetail productDetail = data![index].products![i];
+                      return Stack(
+                        children: [
+                          ItemProduct(
+                            rest: rest,
+                            product: productDetail,
+                            onUpdate: (_) async {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) => EditProductScreen(product: _),
+                              ).then((value) {
+                                if (value is bool && value == true) setState(() {});
+                              });
+                            },
+                            onDelete: (_) async {
+                              await rest.deleteProducts(id: _);
+                              setState(() {});
+                            },
+                          ),
+                          Align(alignment: Alignment.bottomRight, child: Text("${i + 1}")),
+                        ],
+                      );
+                    },
                   ),
-                  itemBuilder: (context, i) {
-                    ProductDetail productDetail = data![index].products![i];
-                    return ItemProduct(
-                      rest: rest,
-                      product: productDetail,
-                      onUpdate: (_) async {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) => EditProductScreen(product: _),
-                        ).then((value) {
-                          if (value is bool && value == true) setState(() {});
-                        });
-                      },
-                      onDelete: (_) async {
-                        await rest.deleteProducts(id: _);
-                        setState(() {});
-                      },
-                    );
-                  },
                 ),
               ],
             ),
@@ -152,7 +171,11 @@ class _ItemProductState extends State<ItemProduct> {
               });
             }
           },
-          onTap: () {},
+          onTap: () {
+            setState(() {
+              _showOption = true;
+            });
+          },
           hoverColor: Colors.blue.shade100,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
@@ -174,13 +197,13 @@ class _ItemProductState extends State<ItemProduct> {
                       ),
                       itemBuilder: (context, index) => Image.network(
                         "$domainServer${widget.product!.image![index]}",
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
                   Container(
                     color: Colors.yellow.shade100,
-                    child: Text(widget.product!.name!, textAlign: TextAlign.center),
+                    child: SelectableText(widget.product!.name!, textAlign: TextAlign.center),
                   ),
                 ],
               ),
