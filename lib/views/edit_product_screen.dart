@@ -20,6 +20,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   TextEditingController _cateText = new TextEditingController();
   TextEditingController _nameText = new TextEditingController();
   TextEditingController _desText = new TextEditingController();
+  TextEditingController _stsText = new TextEditingController();
   bool _isLoadding = false;
 
   List<String> _oldImg = [];
@@ -49,6 +50,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _cateText.text = widget.product.category!;
     _nameText.text = widget.product.name!;
     _desText.text = widget.product.description!;
+    _stsText.text = widget.product.status!;
   }
 
   @override
@@ -100,7 +102,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             ),
                             TextFormField(
                               controller: _desText,
-                              decoration: InputDecoration(labelText: "description"),
+                              decoration: InputDecoration(labelText: "Sescription"),
+                            ),
+                            TextFormField(
+                              controller: _stsText,
+                              decoration: InputDecoration(labelText: "Status"),
                             ),
                           ],
                         ),
@@ -201,7 +207,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         category: _cateText.text,
                         name: _nameText.text,
                         description: _desText.text,
-                        status: "success",
+                        status: _stsText.text.isEmpty ? "public" : _stsText.text,
                         oldImg: _oldImg,
                         img: _images.map((e) => e.bytes!.toList()).toList(),
                       )

@@ -15,7 +15,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Trival Admin',
+      title: 'Guess Admin',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

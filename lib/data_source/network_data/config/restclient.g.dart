@@ -47,7 +47,7 @@ class _RestClient implements RestClient {
         'img',
         MultipartFile.fromBytes(
           i,
-          filename: 'admin.jpg',
+          filename: 'img.jpg',
           contentType: MediaType.parse('image/jpeg'),
         ))));
     final _result = await _dio.fetch(_setStreamType<HttpResponse<dynamic>>(
@@ -84,12 +84,28 @@ class _RestClient implements RestClient {
         'img',
         MultipartFile.fromBytes(
           i,
-          filename: 'admin.jpg',
+          filename: 'img.jpg',
           contentType: MediaType.parse('image/jpeg'),
         ))));
     final _result = await _dio.fetch(_setStreamType<HttpResponse<dynamic>>(
         Options(method: 'POST', headers: <String, dynamic>{}, extra: _extra)
             .compose(_dio.options, '/admin-trival-game/update-product',
+                queryParameters: queryParameters, data: _data)
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<dynamic>?> updateStatusCate({required body}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _result = await _dio.fetch(_setStreamType<HttpResponse<dynamic>>(
+        Options(method: 'POST', headers: <String, dynamic>{}, extra: _extra)
+            .compose(_dio.options, '/admin-trival-game/update-status-cate',
                 queryParameters: queryParameters, data: _data)
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;

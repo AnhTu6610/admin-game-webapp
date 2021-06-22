@@ -155,7 +155,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         category: _cateText.text,
                         name: _nameText.text,
                         description: _desText.text,
-                        status: "success",
+                        status: "public",
                         img: _images.map((e) => e.bytes!.toList()).toList(),
                       )
                           .catchError(

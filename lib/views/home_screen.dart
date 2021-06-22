@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:admin_game/constants/authen_const.dart';
 import 'package:admin_game/main.dart';
+import 'package:admin_game/models/request/body_update_sts_cate.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +84,45 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Divider(),
-                SelectableText(
-                  "${data![index].nameCat} | Items: ${data[index].products?.length}",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    SelectableText(
+                      "${data![index].nameCat} | Items: ${data[index].products?.length}",
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                    Spacer(),
+                    ElevatedButton(
+                      onPressed: () async {
+                        var val = await showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) {
+                            return CupertinoActionSheet(
+                              title: const Text('Status'),
+                              actions: <CupertinoActionSheetAction>[
+                                CupertinoActionSheetAction(
+                                  child: const Text('Public'),
+                                  onPressed: () {
+                                    Navigator.pop(context, "public");
+                                  },
+                                ),
+                                CupertinoActionSheetAction(
+                                  child: const Text('Hide'),
+                                  onPressed: () {
+                                    Navigator.pop(context, "hide");
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        if (val is String && val.isNotEmpty) {
+                          await rest.updateStatusCate(body: new BodyUpdateStscate(category: data![index].nameCat!, status: val));
+                          setState(() {});
+                        }
+                      },
+                      child: Text("Set status all"),
+                    ),
+                  ],
                 ),
                 Divider(),
                 Container(
@@ -123,6 +160,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                           ),
                           Align(alignment: Alignment.bottomRight, child: Text("${i + 1}")),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: productDetail.status == "public" ? Colors.greenAccent : Colors.red,
+                              ),
+                              width: 10,
+                              height: 10,
+                            ),
+                          ),
                         ],
                       );
                     },
@@ -245,10 +293,11 @@ class _ItemProductState extends State<ItemProduct> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                        onPressed: () {
-                          widget.onUpdate!(widget.product);
-                        },
-                        icon: Icon(Icons.edit_outlined)),
+                      onPressed: () {
+                        widget.onUpdate!(widget.product);
+                      },
+                      icon: Icon(Icons.edit_outlined),
+                    ),
                     IconButton(
                       onPressed: () {
                         showCommonDialog(context, title: "Confirm delete", onTapYes: () async {

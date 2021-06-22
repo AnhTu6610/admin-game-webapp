@@ -30,6 +30,11 @@ class _AuthenScreenState extends State<AuthenScreen> {
                 decoration: InputDecoration(hintText: "Password ..."),
                 textAlign: TextAlign.center,
                 controller: _textPass,
+                onSubmitted: (_) {
+                  if (_ == "123") {
+                    Navigator.of(context).pushReplacementNamed("/home", arguments: true);
+                  }
+                },
               ),
             ),
             SizedBox(height: 30),

@@ -1,3 +1,4 @@
+import 'package:admin_game/models/request/body_update_sts_cate.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -18,7 +19,7 @@ abstract class RestClient {
     @Part() required String name,
     @Part() required String description,
     @Part() required String status,
-    @Part(value: "img", contentType: "image/jpeg", fileName: "admin.jpg") required List<List<int>> img,
+    @Part(value: "img", contentType: "image/jpeg", fileName: "img.jpg") required List<List<int>> img,
   });
 
   @POST(API.updateProduct)
@@ -29,7 +30,11 @@ abstract class RestClient {
     @Part() required String description,
     @Part() required String status,
     @Part() required List<String> oldImg,
-    @Part(value: "img", contentType: "image/jpeg", fileName: "admin.jpg") required List<List<int>> img,
+    @Part(value: "img", contentType: "image/jpeg", fileName: "img.jpg") required List<List<int>> img,
+  });
+  @POST(API.updateStatusCate)
+  Future<HttpResponse<dynamic>?> updateStatusCate({
+    @Body() required BodyUpdateStscate body,
   });
 
   @GET(API.deleteProduct)
